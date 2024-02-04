@@ -1,0 +1,38 @@
+.flagRoot {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.flagContainer {
+  padding: 40px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.centeredSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 40%;
+  /* background-color: white; */
+  /* margin: ; */
+}
+
+.flagImg {
+  box-shadow: 0px 0px 10px black;
+  margin-bottom: 40px;
+}
+
+.countdown {
+  margin-bottom: 40px;
+  font-size: 50px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+}
