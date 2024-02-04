@@ -66,7 +66,6 @@ export function FlagsPage() {
   }
 
   const calcPoint = () => {
-    console.log('currentPoints\n', currentPoints);
     const currentDate = Date.now();
     const timeGap = currentDate - renderDate;
     const newPoints = Math.floor(500000/timeGap);

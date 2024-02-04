@@ -12,7 +12,6 @@ export const slice = createSlice({
   },
   reducers: {
     setCurrentUser(state, payload) {
-      console.log(payload)
       return {...state, ...payload.payload}
     },
     logout() {
