@@ -12,15 +12,16 @@ export const slice = createSlice({
   },
   reducers: {
     setCurrentUser(state, payload) {
+      console.log(payload)
       return {...state, ...payload.payload}
     },
     logout() {
-      localStorage.removeItem('currentUser')
+      localStorage.removeItem('currentUser');
       return {isLogged: false, name: '', email: '', record: null, id: '', photoURL: ''}
     },
   },
 });
 
-export const { setCurrentUser, logout } = slice.actions;
+export const { setCurrentUser, logout, remove } = slice.actions;
 
 export default slice.reducer;

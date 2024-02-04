@@ -3,7 +3,7 @@ import { Button, Box, Typography } from '@mui/material';
 import { getLocales } from '../../services/flags';
 import './FlagsPage.css';
 import Countdown, { zeroPad } from 'react-countdown';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/userSlice';
 
@@ -18,7 +18,7 @@ export function FlagsPage() {
   const [renderDate, setRenderDate] = useState();
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const currentUser = useSelector(state => state.user);
 
   useEffect(() => {
@@ -84,8 +84,8 @@ export function FlagsPage() {
   }
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    const action = logout();
+    dispatch(action)
   }
 
   return (
