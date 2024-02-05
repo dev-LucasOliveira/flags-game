@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Box, Button } from "@mui/material";
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
-import { auth } from "../../services/firebaseConfig";
+import { auth, getUser, setNewUser } from "../../services/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../redux/userSlice";
@@ -14,15 +14,65 @@ export function Login() {
 
   const lsUserData = localStorage.getItem('currentUser');
 
-  const setCurrentUserData = (data, isFromLocalStorage) => {
-    const userData = {
-      name: data?.user?.displayName || data.name,
-      email: data?.user?.email || data.email,
-      id: data?.user?.uid || data.id,
-      photoURL: data?.user?.photoURL || data.photoURL,
-      isLogged: true,
-    };
-    !isFromLocalStorage && localStorage.setItem('currentUser', JSON.stringify(userData));
+  const setCurrentUserData = async (data, isFromLocalStorage) => {
+    let userData;
+    if (!isFromLocalStorage) {
+      const id = data?.user?.uid
+      const user = await getUser({ id });
+      if (!user._document) {
+        const {
+          user: {
+            email,
+            uid,
+            photoURL,
+            displayName,
+          },
+        } = data;
+        userData = {
+          name: displayName,
+          email: email,
+          id: uid,
+          record: 0,
+          photoURL: photoURL,
+        };
+        setNewUser(userData);
+        userData.isLogged = true;
+      } else {
+        const {
+          _document: {
+            data: {
+              value: {
+                mapValue: {
+                  fields: {
+                    email,
+                    name,
+                    record,
+                  },
+                },
+              },
+            },
+          },
+        } = user;
+        userData = {
+          name: name.stringValue,
+          email: email.stringValue,
+          id,
+          record: record.integerValue,
+          photoURL: data?.user?.photoURL,
+          isLogged: true,
+        };
+      }
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+    } else {
+      userData = {
+        name: data.name,
+        email: data.email,
+        id: data.id,
+        photoURL: data.photoURL,
+        isLogged: true,
+        record: data.record,
+      };
+    }
     const action = setCurrentUser(userData) 
     dispatch(action);
     navigate('/');

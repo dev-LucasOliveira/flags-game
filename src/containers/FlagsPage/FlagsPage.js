@@ -5,7 +5,7 @@ import './FlagsPage.css';
 import Countdown, { zeroPad } from 'react-countdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../redux/userSlice';
+import { logout, updateCurrentRecord } from '../../redux/userSlice';
 
 export function FlagsPage() {
   const [url, setUrl] = useState();
@@ -87,11 +87,21 @@ export function FlagsPage() {
     dispatch(action)
   }
 
+  const handleEndGame = () => {
+    setShouldStart(!shouldStart);
+    if (currentPoints > currentUser.record) {
+      const action = updateCurrentRecord({ id: currentUser.id, record: currentPoints});
+      dispatch(action);
+    }
+  }
+
   return (
     <Box className='flagRoot'>
-      {/* <Box>
-        <img src={currentUser.photoURL}/>
-      </Box> */}
+      <Box>
+        <Typography sx={{ marginBottom: '40px', fontSize: '40px', color: 'white', textAlign: 'center' }}>
+          Your record is <b>{currentUser.record}</b>!
+        </Typography>
+      </Box>
       <Box>
         <Button
           key='logout-button'
@@ -106,10 +116,10 @@ export function FlagsPage() {
           onClick={() => {
             if (!shouldStart) resetPoints();
             setTimeout(() => {
-              setShouldStart(!shouldStart)
+              handleEndGame();
             }, 1000);
           }}
-        >{shouldStart ? 'Encerrar' : 'Começar'}</Button>
+        >{shouldStart ? 'Desistir' : 'Começar'}</Button>
       </Box>
       <Box className='flagContainer'>
         <Box className='centeredSection columnSection'>
@@ -117,7 +127,7 @@ export function FlagsPage() {
             autoStart={false}
             date={timer}
             onComplete={() => {
-              setShouldStart(false);
+              handleEndGame();
             }}
             renderer={({ seconds, minutes, api: { start, stop } }) =>
               {

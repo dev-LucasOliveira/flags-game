@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from 'firebase/firestore';
+import { doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJKX5LGFNV945pzhqDnOtnDVcwbgPDLWY",
@@ -14,6 +14,20 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-export const db = async () => await getFirestore(app);
+export const getUser = async (data) => {
+  const user = await getDoc(doc(db, 'users', data.id))
+  return user;
+}
+
+export const setNewUser = async (data) => {
+  await setDoc(doc(db, 'users', data.id), data);
+}
+
+export const updateRecord = async (data) => {
+  await updateDoc(doc(db, 'users', data.id), {
+    record: data.record,
+  })
+}
 export const auth = getAuth(app);
